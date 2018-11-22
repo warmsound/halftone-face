@@ -16,40 +16,47 @@
 		<canvas id="watch-face" width="240" height="240"></canvas>
 	</body>
 	<script type="text/javascript">
-		const CANVAS_WIDTH = 240;
-		const CANVAS_HEIGHT = 240;
 		const SPOT_RADIUS = 6, R = SPOT_RADIUS;
 
 		const canvas = document.getElementById('watch-face');
 		const ctx = canvas.getContext('2d');
-
-		// Background.
-		ctx.beginPath();
-		ctx.arc(120, 120, 120, 0, 2 * Math.PI);
-		ctx.fillStyle = '#000000';
-		ctx.fill();
-
-		// Hand.
-		const hand = new Hand(/* length */ 110, /* width */ 15, CANVAS_WIDTH, CANVAS_HEIGHT);
-		//ctx.lineWidth = 1;
-		//ctx.strokeStyle = '#ffffff';
-		//hand.draw(ctx);
-
-		// Spots.
+		const hand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 10, canvas.width, canvas.height);
+		
 		const sampler = new Sampler(R);
-		let result;
 
-		ctx.fillStyle = '#55aaff';
-		for (let x = R; (x + R) <= CANVAS_WIDTH; x += (2 * R)) {
-			for (let y = R; (y + R) <= CANVAS_HEIGHT; y += (2 * R)) {
-				result = sampler.sample(x, y, hand);
-				if (result) {
-					ctx.beginPath();
-					ctx.arc(x, y, result * R, 0, 2 * Math.PI);
-					ctx.fill();
+		function draw() {
+
+			// Background.
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.beginPath();
+			ctx.arc(120, 120, 120, 0, 2 * Math.PI);
+			ctx.fillStyle = '#000000';
+			ctx.fill();
+
+			// Hand.
+			let secs = new Date().getSeconds();
+			hand.setAngle((secs / 60) * 360);
+			//ctx.lineWidth = 1;
+			//ctx.strokeStyle = '#ffffff';
+			//hand.draw(ctx);
+
+			// Spots.
+			let result;
+
+			ctx.fillStyle = '#55aaff';
+			for (let y = R; (y + R) <= canvas.height; y += (2 * R)) {
+				for (let x = R; (x + R) <= canvas.width; x += (2 * R)) {
+					result = sampler.sample(x, y, hand);
+					if (result) {
+						ctx.beginPath();
+						ctx.arc(x, y, result * R, 0, 2 * Math.PI);
+						ctx.fill();
+					}
 				}
 			}
 		}
 
+		draw();
+		setInterval(draw, 1000);
 	</script>
 </html>

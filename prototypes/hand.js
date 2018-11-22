@@ -5,9 +5,17 @@ class Hand {
 		this.cw = canvasWidth;
 		this.ch = canvasHeight;
 
+		this.setAngle(135);
+	}
+
+	setAngle(deg) {
+		// Convert to clockwise degrees from 12 o'clock.
+		deg -= 90;
+		deg *= -1;
+
 		this.matrix = new Matrix()
 			.translate(this.cw / 2, this.ch / 2)
-			.rotate(57)
+			.rotate(deg)
 			.scale(this.l, this.w)
 			.translate(0, -0.5);
 
