@@ -28,8 +28,8 @@ class Hand {
 		}
 	}
 
-	isPointInHand(p) {
+	containsPoint(p) {
 		p = this.inverseMatrix.transformPoint(p);
-		return (p[0] >= 0) && (p[0] < 1) && (p[1] >= 0) && (p[1 < 1]);
+		return (p[0] >= 0) && (p[0] < 1) && (p[1] >= 0) && (p[1] < 1);
 	}
 }

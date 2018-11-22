@@ -102,6 +102,6 @@ class Matrix {
 			Matrix.det2(this.m11, this.m12, this.m21, this.m22)
 		).transpose();
 
-		return cofactor.multiplyScalar(1 / cofactor.det());
+		return cofactor.multiplyScalar(1 / this.det());
 	}
 }
