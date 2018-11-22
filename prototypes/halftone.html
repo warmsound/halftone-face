@@ -10,6 +10,7 @@
 		</style>
 		<script src="matrix.js"></script>
 		<script src="hand.js"></script>
+		<script src="sampler.js"></script>
 	</head>
 	<body>
 		<canvas id="watch-face" width="240" height="240"></canvas>
@@ -29,27 +30,22 @@
 		ctx.fill();
 
 		// Hand.
-		const hand = new Hand(/* length */ 100, /* width */ 20, /* canvasWidth */ 240, /* canvasHeight */ 240);
-		const path = hand.getPath();
-
-		ctx.beginPath();
-		ctx.moveTo(path[0][0], path[0][1]);
-		ctx.lineTo(path[1][0], path[1][1]);
-		ctx.lineTo(path[2][0], path[2][1]);
-		ctx.lineTo(path[3][0], path[3][1]);
-		ctx.closePath();
-
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = '#ffffff';
-		ctx.stroke();
+		const hand = new Hand(/* length */ 110, /* width */ 15, CANVAS_WIDTH, CANVAS_HEIGHT);
+		//ctx.lineWidth = 1;
+		//ctx.strokeStyle = '#ffffff';
+		//hand.draw(ctx);
 
 		// Spots.
-		ctx.fillStyle = '#555555';
+		const sampler = new Sampler(R);
+		let result;
+
+		ctx.fillStyle = '#55aaff';
 		for (let x = R; (x + R) <= CANVAS_WIDTH; x += (2 * R)) {
 			for (let y = R; (y + R) <= CANVAS_HEIGHT; y += (2 * R)) {
-				if (hand.containsPoint([x, y])) {
+				result = sampler.sample(x, y, hand);
+				if (result) {
 					ctx.beginPath();
-					ctx.arc(x, y, 2, 0, 2 * Math.PI);
+					ctx.arc(x, y, result * R, 0, 2 * Math.PI);
 					ctx.fill();
 				}
 			}
