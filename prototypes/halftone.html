@@ -16,20 +16,20 @@
 		<canvas id="watch-face" width="240" height="240"></canvas>
 	</body>
 	<script type="text/javascript">
-		const SPOT_RADIUS = 6, R = SPOT_RADIUS;
-		const GAMMA = 0.33;
+		const SPOT_RADIUS = 5, R = SPOT_RADIUS;
+		const GAMMA = 0.2;
 
 		const canvas = document.getElementById('watch-face');
 		const ctx = canvas.getContext('2d');
 
 		const sampler = new Sampler(R);
 
-		const hrsHand = new Hand(/* length */ 85, /* width */ 30, canvas.width, canvas.height,
-			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
-		const minsHand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 15, canvas.width, canvas.height,
-			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
-		const secsHand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 5, canvas.width, canvas.height,
-			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
+		const hrsHand = new Hand(/* length */ 85, /* width */ 24, canvas.width, canvas.height,
+			['#00aaff', '#0000ff', '#555555'], sampler);
+		const minsHand = new Hand(/* length */ 115, /* width */ 16, canvas.width, canvas.height,
+			['#ff00ff', '#aa00ff', '#555555'], sampler);
+		const secsHand = new Hand(/* length */ 115, /* width */ 8, canvas.width, canvas.height,
+			['#ffffff', '#aaaaaa', '#555555'], sampler);
 
 		function draw() {
 
@@ -37,7 +37,7 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.beginPath();
 			ctx.arc(120, 120, 120, 0, 2 * Math.PI);
-			ctx.fillStyle = '#000055';
+			ctx.fillStyle = '#000000';
 			ctx.fill();
 
 			// Hands.
