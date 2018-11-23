@@ -1,11 +1,10 @@
 class Hand {
-	constructor(length, width, canvasWidth, canvasHeight, colours, sampler) {
+	constructor(length, width, canvasWidth, canvasHeight, colours) {
 		this.l = length;
 		this.w = width;
 		this.cw = canvasWidth;
 		this.ch = canvasHeight;
 		this.colours = colours; // [bright, medium, dark]
-		this.sampler = sampler;
 
 		this.setAngle(0);
 	}
@@ -63,34 +62,23 @@ class Hand {
 		ctx.stroke();
 	}
 
-	draw(ctx) {
-		let result;
-		let colour;
-		for (let y = R, rowIndex = 0; (y + R) <= canvas.height; y += (2 * R), ++rowIndex) {
-			for (let x = (rowIndex % 2) ? 0 : R; (x + R) <= canvas.width; x += (2 * R)) {
-				ctx.beginPath();
+	drawSpot(ctx, x, y, result) {
+		switch (result) {
+			case 7: case 6: case 5:
+				ctx.fillStyle = this.colours[0];
+				break;
 
-				result = this.sampler.sample(x, y, this);
-				if (result) {
-					switch (result) {
-						case 7: case 6: case 5:
-							colour = this.colours[0];
-							break;
+			case 4: case 3:
+				ctx.fillStyle = this.colours[1];
+				break;
 
-						case 4: case 3:
-							colour = this.colours[1];
-							break;
-
-						default:
-							colour = this.colours[2];
-							break;
-					}
-					ctx.fillStyle = colour;
-					ctx.arc(x, y, (GAMMA + ((1 - GAMMA) * (result / 7))) * R, 0, 2 * Math.PI);
-				}
-
-				ctx.fill();
-			}
+			default:
+				ctx.fillStyle = this.colours[2];
+				break;
 		}
+
+		ctx.beginPath();
+		ctx.arc(x, y, (GAMMA + ((1 - GAMMA) * (result / 7))) * R, 0, 2 * Math.PI);
+		ctx.fill();
 	}
 }

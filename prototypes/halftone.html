@@ -16,20 +16,20 @@
 		<canvas id="watch-face" width="240" height="240"></canvas>
 	</body>
 	<script type="text/javascript">
-		const SPOT_RADIUS = 5, R = SPOT_RADIUS;
-		const GAMMA = 0.2;
+		const SPOT_RADIUS = 6, R = SPOT_RADIUS;
+		const GAMMA = 0.4;
 
 		const canvas = document.getElementById('watch-face');
 		const ctx = canvas.getContext('2d');
 
 		const sampler = new Sampler(R);
 
-		const hrsHand = new Hand(/* length */ 85, /* width */ 24, canvas.width, canvas.height,
-			['#00aaff', '#0000ff', '#555555'], sampler);
-		const minsHand = new Hand(/* length */ 115, /* width */ 16, canvas.width, canvas.height,
-			['#ff00ff', '#aa00ff', '#555555'], sampler);
-		const secsHand = new Hand(/* length */ 115, /* width */ 8, canvas.width, canvas.height,
-			['#ffffff', '#aaaaaa', '#555555'], sampler);
+		const hrsHand = new Hand(/* length */ 85, /* width */ 30, canvas.width, canvas.height,
+			['#00aaff', '#0000ff', '#0000aa']);
+		const minsHand = new Hand(/* length */ 115, /* width */ 21, canvas.width, canvas.height,
+			['#ff00ff', '#aa00ff', '#5500ff']);
+		const secsHand = new Hand(/* length */ 115, /* width */ 9, canvas.width, canvas.height,
+			['#ffffff', '#aaaaaa', '#555555']);
 
 		function draw() {
 
@@ -37,23 +37,34 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.beginPath();
 			ctx.arc(120, 120, 120, 0, 2 * Math.PI);
-			ctx.fillStyle = '#000000';
+			ctx.fillStyle = '#000055';
 			ctx.fill();
 
 			// Hands.
-			let now = new Date();
+			const now = new Date();
 
-			let hrs = now.getHours() % 12;
-			hrsHand.setAngle(hrs * (360 / 12));
-			hrsHand.draw(ctx);
-
-			let mins = now.getMinutes();
-			minsHand.setAngle(mins * (360 / 60));
-			minsHand.draw(ctx);
-
-			let secs = now.getSeconds() + (now.getMilliseconds() / 1000);
+			const secs = now.getSeconds() + (now.getMilliseconds() / 1000);
 			secsHand.setAngle(secs * (360 / 60));
-			secsHand.draw(ctx);
+
+			const mins = now.getMinutes();
+			minsHand.setAngle(mins * (360 / 60));
+
+			const hrs = now.getHours() % 12;
+			hrsHand.setAngle(hrs * (360 / 12));
+
+			let result;
+			for (let y = R, rowIndex = 0; (y + R) <= canvas.height; y += (2 * R), ++rowIndex) {
+				for (let x = (rowIndex % 2) ? 0 : R; (x + R) <= canvas.width; x += (2 * R)) {
+					
+					if (result = sampler.sample(x, y, secsHand)) {
+						secsHand.drawSpot(ctx, x, y, result);
+					} else if (result = sampler.sample(x, y, minsHand)) {
+						minsHand.drawSpot(ctx, x, y, result);
+					} else if (result = sampler.sample(x, y, hrsHand)) {
+						hrsHand.drawSpot(ctx, x, y, result);
+					}
+				}
+			}
 
 			//requestAnimationFrame(draw);
 		}
