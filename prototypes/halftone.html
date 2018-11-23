@@ -24,7 +24,11 @@
 
 		const sampler = new Sampler(R);
 
-		const hand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 15, canvas.width, canvas.height,
+		const hrsHand = new Hand(/* length */ 85, /* width */ 30, canvas.width, canvas.height,
+			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
+		const minsHand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 15, canvas.width, canvas.height,
+			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
+		const secsHand = new Hand(/* length */ (canvas.height / 2) - R, /* width */ 5, canvas.width, canvas.height,
 			['#ff00ff', '#aa00ff', '#5500ff'], sampler);
 
 		function draw() {
@@ -36,12 +40,20 @@
 			ctx.fillStyle = '#000055';
 			ctx.fill();
 
-			// Hand.
+			// Hands.
 			let now = new Date();
+
+			let hrs = now.getHours() % 12;
+			hrsHand.setAngle(hrs * (360 / 12));
+			hrsHand.draw(ctx);
+
+			let mins = now.getMinutes();
+			minsHand.setAngle(mins * (360 / 60));
+			minsHand.draw(ctx);
+
 			let secs = now.getSeconds() + (now.getMilliseconds() / 1000);
-			hand.setAngle((secs / 60) * 360);
-			//hand.drawOutline(ctx);
-			hand.draw(ctx);
+			secsHand.setAngle(secs * (360 / 60));
+			secsHand.draw(ctx);
 
 			//requestAnimationFrame(draw);
 		}
